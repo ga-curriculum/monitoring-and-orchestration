@@ -52,11 +52,17 @@ This is the central challenge of monitoring deployed agents: **the agent doesn't
 
 Monitoring is not about distrusting your agent. It is about maintaining the visibility that lets you trust it — because you can see what it's doing and verify that it's working.
 
+<img width="924" height="170" alt="image" src="https://git.generalassemb.ly/user-attachments/assets/24e45d63-b23f-4a53-8a4d-30e0510c9b71" />
+
+
 ---
 
 ### What to Monitor: The Three Layers
 
 Effective agent monitoring operates at three levels simultaneously. Each answers a different question.
+
+<img width="923" height="143" alt="image" src="https://git.generalassemb.ly/user-attachments/assets/d6381389-f777-4659-84b5-1025de5bcb0b" />
+
 
 ---
 
@@ -168,13 +174,8 @@ The reasoning trace transforms debugging from guesswork into diagnosis.
 
 You don't need sophisticated infrastructure to monitor effectively. What you need is:
 
-**A log:** Every agent run should produce a record — at minimum, the timestamp, the input, the output, whether it completed or escalated, and any tool errors. Most no-code platforms produce this automatically; you may need to route it to a spreadsheet, a logging tool, or a simple database.
+<img width="918" height="358" alt="image" src="https://git.generalassemb.ly/user-attachments/assets/347a1b36-9d45-428c-bddc-feab4a714c4a" />
 
-**A dashboard:** A weekly view of your three-layer metrics — completion rate, error rate, escalation rate, response time, and any quality metrics you've defined. A simple Google Sheet updated weekly is sufficient at the start. The goal is visibility, not sophistication.
-
-**A review cadence:** Someone reviews the dashboard and a random sample of logs on a defined schedule. Weekly is the right starting frequency for a newly deployed agent. Bi-weekly is acceptable once the agent is stable. Monthly is too infrequent to catch problems before they become serious.
-
-**An alert:** At least one automated notification that fires when something crosses a threshold — error rate above 10%, completion rate below 80%, zero completions in 24 hours. You shouldn't need to check the dashboard to know something is badly wrong.
 
 ---
 
@@ -384,28 +385,11 @@ As teams gain trust in an agent's reliability, there is a natural tendency to re
 
 This is appropriate — if it happens gradually and based on demonstrated reliability, not just on optimism.
 
-```
-The autonomy ladder (appropriate progression):
+<img width="862" height="416" alt="image" src="https://git.generalassemb.ly/user-attachments/assets/a03f2b5e-92e3-4110-804e-acb854c1aacc" />
 
-Level 1 — Human approves every action
-  Appropriate when: Agent is newly deployed, high-stakes actions
-  
-Level 2 — Human reviews a sample of completed actions
-  Appropriate when: Error rate is consistently below 2%, 
-                    actions are reversible
-  
-Level 3 — Human reviews only escalated cases
-  Appropriate when: Escalation rate is stable and cases reviewed 
-                    confirm correct escalation decisions
-  
-Level 4 — Automated monitoring only, human reviews alerts
-  Appropriate when: Several months of stable, low error rate, 
-                    well-defined alert thresholds, fast human 
-                    response process in place
 
-Moving up the ladder requires demonstrated reliability at 
-the current level — not just confidence that things will be fine.
-```
+**Moving up the ladder requires demonstrated reliability at 
+the current level — not just confidence that things will be fine.**
 
 The most common mistake in autonomy scaling is moving from Level 1 to Level 4 too quickly because the agent "seems to be working." Gradual progression with defined criteria for each level is how trust is built and maintained.
 
@@ -415,17 +399,8 @@ The most common mistake in autonomy scaling is moving from Level 1 to Level 4 to
 
 Before increasing the volume, complexity, or autonomy of an agent:
 
-| Check | Status |
-|---|---|
-| Baseline metrics established and tracked (completion, error, escalation, response time) | ✅ / ❌ |
-| Random sampling review cadence in place | ✅ / ❌ |
-| Reasoning trace logging enabled | ✅ / ❌ |
-| At least one automated alert configured | ✅ / ❌ |
-| Prompt and logic refinements documented (not just made) | ✅ / ❌ |
-| Security checklist re-run if new tools or capabilities added | ✅ / ❌ |
-| Stress test completed before volume increase | ✅ / ❌ |
-| Autonomy level increase based on demonstrated reliability, not optimism | ✅ / ❌ |
-| A human is accountable for ongoing performance oversight | ✅ / ❌ |
+<img width="887" height="411" alt="image" src="https://git.generalassemb.ly/user-attachments/assets/1e9db00a-a229-4428-8bc8-199ba93990c5" />
+
 
 ---
 
