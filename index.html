@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Monitoring & Orchestration — General Assembly BAA 15.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900&family=Barlow+Condensed:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#0d0d0d;--black2:#1a1a1a;--black3:#252525;--black4:#333;
+  --line:#2e2e2e;--line2:#404040;--gray-dk:#555;--gray:#888;
+  --gray-lt:#bbb;--white:#fff;
+  --GA-red:#e8333a;--GA-red2:#ff4a50;
+  --yellow:#f5c518;--green:#22c55e;--blue:#3b82f6;--purple:#a855f7;
+  --teal:#14b8a6;--orange:#f97316;
+  --r:4px;--r-lg:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);font-size:16px;line-height:1.6;min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--black2)}::-webkit-scrollbar-thumb{background:var(--black4);border-radius:3px}
+header{position:sticky;top:0;z-index:500;background:var(--black);border-bottom:2px solid var(--GA-red);display:flex;align-items:stretch;height:58px}
+.ga-logo{display:flex;align-items:center;gap:10px;padding:0 20px;border-right:1px solid var(--line);flex-shrink:0;cursor:pointer}
+.ga-mark{width:32px;height:32px;background:var(--GA-red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#fff;border-radius:2px}
+.ga-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--gray-lt);text-transform:uppercase;line-height:1.2}
+.ga-name span{display:block;font-size:10px;color:var(--gray);font-weight:600}
+.tab-bar{display:flex;align-items:stretch;overflow-x:auto;flex:1;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab{display:flex;align-items:center;padding:0 13px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;position:relative;top:2px}
+.tab:hover{color:#fff}.tab.active{color:#fff;border-bottom-color:var(--GA-red)}
+.hd-end{display:flex;align-items:center;padding:0 18px;border-left:1px solid var(--line);flex-shrink:0}
+.prog-chip{background:var(--GA-red);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 12px;border-radius:20px;white-space:nowrap}
+.section{display:none}.section.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:48px 24px 80px}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--GA-red);margin-bottom:10px;display:block}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:900;line-height:1.05;color:#fff;margin-bottom:16px}
+h1 .red{color:var(--GA-red)}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;line-height:1.1;color:#fff;margin-bottom:8px}
+h2 .red{color:var(--GA-red)}
+.lead{font-size:1.02rem;color:var(--gray-lt);line-height:1.72;margin-bottom:28px;max-width:680px}
+.hr{height:1px;background:var(--line);margin:36px 0}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .15s;white-space:nowrap}
+.btn-red{background:var(--GA-red);color:#fff;border-color:var(--GA-red)}.btn-red:hover{background:var(--GA-red2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--gray-lt);border:2px solid var(--line2);padding:10px 20px;font-size:.88rem;font-weight:600;cursor:pointer;border-radius:var(--r);transition:all .15s}.btn-ghost:hover{border-color:var(--gray);color:#fff}
+.btn-green{background:var(--green);color:var(--black);border:none;border-radius:var(--r);padding:11px 24px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s}.btn-green:hover{background:#16a34a}
+.card{background:var(--black2);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;margin-bottom:16px}
+.card-rb{border-top:3px solid var(--GA-red)}
+.callout{border-radius:var(--r-lg);padding:14px 18px;margin:12px 0;font-size:.88rem;line-height:1.65}
+.callout-tip{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#93c5fd}
+.callout-warn{background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.2);color:#fde68a}
+.callout-success{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#86efac}
+.callout-purple{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);color:#d8b4fe}
+.callout-red{background:rgba(232,51,58,.07);border:1px solid rgba(232,51,58,.2);color:#fca5a5}
+.callout strong{color:#fff}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.a1{animation:fadeUp .35s ease both}.a2{animation:fadeUp .35s .1s ease both}.a3{animation:fadeUp .35s .2s ease both}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;background:var(--black3);border:1px solid var(--line);border-radius:var(--r);padding:6px 14px;margin-bottom:20px;font-size:12px;font-weight:600;color:var(--gray-lt);letter-spacing:.04em}
+.hero-kicker .dot{width:8px;height:8px;background:var(--GA-red);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.roadmap{display:flex;flex-direction:column}
+.rm-item{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.rm-item:last-child{border-bottom:none}
+.rm-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;border:2px solid var(--line);background:var(--black3);color:var(--gray);transition:all .25s}
+.rm-dot.done{background:var(--green);border-color:var(--green);color:var(--black)}
+.rm-label{font-size:.95rem;font-weight:600;color:var(--gray);padding-top:6px}
+.rm-label.done{color:var(--green)}
+.rm-sub{font-size:.8rem;color:var(--gray-dk);margin-top:2px}
+
+/* ── LIVE DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:16px}
+.dash-tile{background:var(--black2);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.dash-tile::before{content:'';position:absolute;inset:0;border-radius:var(--r-lg);opacity:0;transition:opacity .2s}
+.dash-tile:hover::before{opacity:1}
+.dash-tile.normal{border-color:var(--line)}
+.dash-tile.warn{border-color:var(--yellow);box-shadow:0 0 14px rgba(245,197,24,.12)}
+.dash-tile.crit{border-color:var(--GA-red);box-shadow:0 0 18px rgba(232,51,58,.18);animation:critPulse 2s infinite}
+@keyframes critPulse{0%,100%{box-shadow:0 0 18px rgba(232,51,58,.18)}50%{box-shadow:0 0 28px rgba(232,51,58,.35)}}
+.dash-val{font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:3px}
+.dash-lbl{font-size:.78rem;color:var(--gray-dk);line-height:1.3;margin-bottom:8px}
+.dash-bar{height:3px;background:var(--black4);border-radius:2px;margin-bottom:6px}
+.dash-fill{height:100%;border-radius:2px;transition:width 1.4s ease}
+.dash-meta{display:flex;align-items:center;justify-content:space-between;font-size:.7rem;color:var(--gray-dk);font-family:'JetBrains Mono',monospace}
+.dash-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase}
+.dash-sparkline{height:28px;width:100%;margin-bottom:8px}
+.dash-tile .selected-ring{display:none;position:absolute;inset:-1px;border:2px solid var(--GA-red);border-radius:var(--r-lg);pointer-events:none}
+.dash-tile.selected .selected-ring{display:block}
+/* Anomaly highlight overlay */
+.anomaly-flash{animation:anomalyFlash .5s ease}
+@keyframes anomalyFlash{0%{background:rgba(232,51,58,.3)}100%{background:transparent}}
+/* Time controls */
+.time-pills{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.time-pill{padding:4px 12px;border-radius:20px;font-size:.76rem;font-weight:700;cursor:pointer;border:1.5px solid var(--line2);color:var(--gray);transition:all .15s}
+.time-pill:hover{color:#fff;border-color:var(--gray)}
+.time-pill.active{background:var(--black3);border-color:var(--gray);color:#fff}
+/* Alert feed */
+.alert-feed{background:#080808;border:1px solid var(--line);border-radius:var(--r-lg);max-height:180px;overflow-y:auto;padding:8px 0}
+.alert-feed::-webkit-scrollbar{width:3px}.alert-feed::-webkit-scrollbar-thumb{background:var(--black4)}
+.alert-item{display:flex;align-items:flex-start;gap:12px;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,.03);font-size:.8rem;line-height:1.55}
+.alert-item:last-child{border-bottom:none}
+.alert-sev{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.06em;flex-shrink:0;margin-top:1px;text-transform:uppercase}
+.alert-sev.crit{background:rgba(232,51,58,.2);color:var(--GA-red)}
+.alert-sev.warn{background:rgba(245,197,24,.15);color:var(--yellow)}
+.alert-sev.info{background:rgba(59,130,246,.15);color:#93c5fd}
+.alert-ts{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--gray-dk);flex-shrink:0;padding-top:2px}
+.alert-msg{color:var(--gray-lt);flex:1}
+.alert-msg strong{color:#fff}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.alert-item{animation:slideIn .2s ease both}
+
+/* ── LOG VIEWER ── */
+.log-shell{background:#040404;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.log-titlebar{background:var(--black3);padding:8px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.log-dot{width:9px;height:9px;border-radius:50%}
+.log-name{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--gray-lt)}
+.log-filter-pills{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap}
+.lf-pill{padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:700;cursor:pointer;border:1px solid var(--line2);color:var(--gray);transition:all .15s;letter-spacing:.04em;text-transform:uppercase}
+.lf-pill.active{background:var(--black2);border-color:var(--gray);color:#fff}
+.log-entries{overflow-y:auto;max-height:480px}
+.log-entries::-webkit-scrollbar{width:3px}.log-entries::-webkit-scrollbar-thumb{background:var(--black4)}
+.log-row{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.03);transition:background .15s;cursor:pointer}
+.log-row:hover{background:rgba(255,255,255,.025)}
+.log-row.selected{background:rgba(232,51,58,.06);border-left:3px solid var(--GA-red)}
+.log-row.highlight-fail{background:rgba(232,51,58,.05);border-left:3px solid var(--GA-red)}
+.log-row.highlight-warn{background:rgba(245,197,24,.05);border-left:2px solid var(--yellow)}
+.log-gutter{width:44px;padding:10px 0 10px 12px;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gray-dk);flex-shrink:0;border-right:1px solid rgba(255,255,255,.04);text-align:right;padding-right:8px;user-select:none}
+.log-body{flex:1;padding:10px 14px;overflow:hidden}
+.log-ts{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--gray-dk);margin-bottom:3px}
+.log-level{font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;margin-right:6px}
+.level-info{background:rgba(59,130,246,.15);color:#93c5fd}
+.level-warn{background:rgba(245,197,24,.15);color:var(--yellow)}
+.level-error{background:rgba(232,51,58,.2);color:#fca5a5}
+.level-debug{background:rgba(136,136,136,.12);color:var(--gray)}
+.log-msg{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gray-lt);line-height:1.6;margin-top:3px}
+.log-trace{display:none;background:#0a0a0a;border-top:1px solid var(--line);padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--gray-lt);line-height:1.8;white-space:pre-wrap}
+.log-trace.open{display:block}
+.trace-key{color:#f472b6}.trace-val{color:#86efac}.trace-err{color:#fca5a5}.trace-warn{color:var(--yellow)}
+/* annotation */
+.log-annotation{display:none;background:rgba(232,51,58,.06);border:1px solid rgba(232,51,58,.2);border-radius:0 0 var(--r-lg) var(--r-lg);padding:12px 16px;font-size:.84rem;color:#fca5a5;line-height:1.65}
+.log-annotation.show{display:block}
+.log-annotation strong{color:#fff}
+
+/* ── MCQ (shared) ── */
+.mcq-opt{background:var(--black2);border:2px solid var(--line);border-radius:var(--r-lg);padding:12px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;font-size:.91rem;color:var(--gray-lt);transition:all .15s;text-align:left;width:100%;margin-bottom:8px}
+.mcq-opt:hover:not(.disabled){border-color:var(--GA-red);color:#fff}
+.mcq-opt.correct{border-color:var(--green);background:rgba(34,197,94,.07);color:#fff}
+.mcq-opt.wrong{border-color:var(--GA-red);background:rgba(232,51,58,.07)}
+.mcq-opt.disabled{cursor:default}
+.opt-k{width:26px;height:26px;border-radius:5px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;color:var(--gray);margin-top:1px}
+.mcq-opt.correct .opt-k{background:var(--green);border-color:var(--green);color:var(--black)}
+.mcq-opt.wrong .opt-k{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
+.mcq-fb{display:none;border-radius:var(--r-lg);padding:12px 16px;font-size:.87rem;line-height:1.62;margin-top:2px;margin-bottom:8px}
+.mcq-fb.show{display:block}.mcq-fb.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#86efac}
+.mcq-fb.bad{background:rgba(232,51,58,.1);border:1px solid rgba(232,51,58,.25);color:#fca5a5}
+
+/* ── PROMPT DIFF ── */
+.diff-wrap{background:#080808;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:14px 0}
+.diff-head{background:var(--black3);padding:7px 16px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--gray);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.diff-line{display:flex;font-family:'JetBrains Mono',monospace;font-size:.79rem;line-height:1.8;padding:2px 0}
+.diff-num{width:36px;text-align:right;padding-right:10px;color:var(--gray-dk);flex-shrink:0;font-size:.68rem;user-select:none;padding-top:2px}
+.diff-line.removed{background:rgba(232,51,58,.08)}
+.diff-line.removed .diff-sign{color:var(--GA-red);width:14px;flex-shrink:0}
+.diff-line.added{background:rgba(34,197,94,.07)}
+.diff-line.added .diff-sign{color:var(--green);width:14px;flex-shrink:0}
+.diff-line.ctx .diff-sign{color:var(--gray-dk);width:14px;flex-shrink:0}
+.diff-text{color:var(--gray-lt);flex:1;padding-right:14px;white-space:pre-wrap;line-height:1.7}
+.diff-line.removed .diff-text{color:#fca5a5}
+.diff-line.added .diff-text{color:#86efac}
+.diff-content{padding:6px 0}
+
+/* ── SCALE MATCHING ── */
+.scale-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.scenario-card{background:var(--black2);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:all .2s;position:relative}
+.scenario-card:hover{border-color:var(--line2)}
+.scenario-card.selected{border-color:var(--GA-red);background:rgba(232,51,58,.05)}
+.scenario-card.matched-ok{border-color:var(--green);background:rgba(34,197,94,.06);cursor:default}
+.scenario-card.matched-bad{border-color:var(--GA-red);background:rgba(232,51,58,.08);cursor:default;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.scenario-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;color:var(--GA-red);margin-bottom:6px;letter-spacing:.1em}
+.scenario-title{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:5px}
+.scenario-body{font-size:.82rem;color:var(--gray-dk);line-height:1.55}
+.scenario-match{display:none;font-size:.78rem;font-weight:700;margin-top:8px}
+.scenario-card.matched-ok .scenario-match{display:block;color:var(--green)}
+.strategy-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;padding:16px;background:var(--black3);border:1px solid var(--line);border-radius:var(--r-lg)}
+.strategy-chip{padding:8px 14px;background:var(--black2);border:1.5px solid var(--line2);border-radius:var(--r-lg);cursor:pointer;font-size:.84rem;color:var(--gray-lt);transition:all .15s;user-select:none}
+.strategy-chip:hover{border-color:var(--gray);color:#fff}
+.strategy-chip.active{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
+.strategy-chip.used{opacity:.35;pointer-events:none}
+
+/* ── QUIZ ── */
+.qz-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.qz-meta span{font-size:.85rem;color:var(--gray)}
+.prog-bar{height:4px;background:var(--black3);border-radius:2px;margin-bottom:28px;overflow:hidden}
+.prog-fill{height:100%;background:var(--GA-red);border-radius:2px;transition:width .4s}
+.quiz-q{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;line-height:1.3;color:#fff;margin-bottom:20px}
+.q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.q-opt{background:var(--black2);border:2px solid var(--line);border-radius:var(--r-lg);padding:14px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:14px;font-size:.95rem;color:var(--gray-lt);transition:all .16s;text-align:left;width:100%}
+.q-opt:hover:not(.disabled){border-color:var(--GA-red);color:#fff;background:rgba(232,51,58,.05)}
+.q-opt.correct{border-color:var(--green);background:rgba(34,197,94,.07);color:#fff}
+.q-opt.wrong{border-color:var(--GA-red);background:rgba(232,51,58,.08);color:#fff}
+.q-opt.disabled{cursor:default}
+.q-opt-k{width:30px;height:30px;border-radius:6px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gray)}
+.q-opt.correct .q-opt-k{background:var(--green);border-color:var(--green);color:var(--black)}
+.q-opt.wrong .q-opt-k{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
+.q-opt:hover:not(.disabled) .q-opt-k{border-color:var(--GA-red);color:var(--GA-red)}
+.fb-box{display:none;border-radius:var(--r-lg);padding:14px 18px;font-size:.92rem;line-height:1.6;margin-bottom:14px}
+.fb-box.show{display:flex;gap:10px;align-items:flex-start}
+.fb-box.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac}
+.fb-box.bad{background:rgba(232,51,58,.1);border:1px solid rgba(232,51,58,.3);color:#fca5a5}
+/* Results */
+.score-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.score-row:last-child{border-bottom:none}
+.score-bar-wrap{width:80px;height:3px;background:var(--black3);border-radius:2px;flex-shrink:0}
+.score-bar-fill{height:100%;border-radius:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ga-logo" onclick="nav('intro')">
+    <div class="ga-mark">GA</div>
+    <div class="ga-name">General Assembly<span>Build AI Agents · BAA 15.0</span></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab active" id="t-intro"    onclick="nav('intro')">⬡ Overview</div>
+    <div class="tab"        id="t-brief"    onclick="nav('brief')">📋 Brief</div>
+    <div class="tab"        id="t-dashboard" onclick="nav('dashboard')">📊 Dashboard</div>
+    <div class="tab"        id="t-logs"     onclick="nav('logs')">📋 Log Analysis</div>
+    <div class="tab"        id="t-diagnose" onclick="nav('diagnose')">🔬 Diagnose</div>
+    <div class="tab"        id="t-refine"   onclick="nav('refine')">✏️ Refine</div>
+    <div class="tab"        id="t-scale"    onclick="nav('scale')">📈 Scale</div>
+    <div class="tab"        id="t-quiz"     onclick="nav('quiz')">◇ Check</div>
+    <div class="tab"        id="t-results"  onclick="nav('results')">★ Results</div>
+  </div>
+  <div class="hd-end"><div class="prog-chip" id="progressChip">0 / 5</div></div>
+</header>
+
+<!-- ══════════ INTRO ══════════ -->
+<div class="section active" id="s-intro">
+<div class="wrap">
+  <div class="a1" style="padding-bottom:40px;border-bottom:1px solid var(--line);margin-bottom:36px">
+    <div class="hero-kicker"><div class="dot"></div>Lab · Module 15 · BAA 15.0</div>
+    <h1>Monitoring &<br/><span class="red">Orchestration</span></h1>
+    <p class="lead">Building an agent is day one. Running it reliably at scale for 90 days is the real job. This lab shifts from building to maintaining — you'll set up performance dashboards, read and annotate reasoning logs, diagnose and fix a failed response, and evaluate whether your system can actually scale.</p>
+    <button class="btn btn-red" onclick="nav('brief')">Start Monitoring →</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:36px" class="a2">
+    <div class="card" style="padding:18px 20px;display:flex;gap:14px;margin-bottom:0"><div style="font-size:1.8rem;flex-shrink:0">📊</div><div><strong style="color:#fff;display:block;margin-bottom:4px">Read a Live Dashboard</strong><div style="font-size:.86rem;color:var(--gray-lt);line-height:1.5">Identify which metric has breached its alert threshold and understand why it matters.</div></div></div>
+    <div class="card" style="padding:18px 20px;display:flex;gap:14px;margin-bottom:0"><div style="font-size:1.8rem;flex-shrink:0">🔍</div><div><strong style="color:#fff;display:block;margin-bottom:4px">Analyze Agent Logs</strong><div style="font-size:.86rem;color:var(--gray-lt);line-height:1.5">Read a real reasoning trace, find the failure entry, and annotate it with the root cause.</div></div></div>
+    <div class="card" style="padding:18px 20px;display:flex;gap:14px;margin-bottom:0"><div style="font-size:1.8rem;flex-shrink:0">🔬</div><div><strong style="color:#fff;display:block;margin-bottom:4px">Diagnose the Failure</strong><div style="font-size:.86rem;color:var(--gray-lt);line-height:1.5">Classify the failure type and trace it to its root cause using the reasoning trace as evidence.</div></div></div>
+    <div class="card" style="padding:18px 20px;display:flex;gap:14px;margin-bottom:0"><div style="font-size:1.8rem;flex-shrink:0">✏️</div><div><strong style="color:#fff;display:block;margin-bottom:4px">Write the Prompt Fix</strong><div style="font-size:.86rem;color:var(--gray-lt);line-height:1.5">Review a before/after diff and select the correct configuration change to prevent recurrence.</div></div></div>
+    <div class="card" style="padding:18px 20px;display:flex;gap:14px;margin-bottom:0"><div style="font-size:1.8rem;flex-shrink:0">📈</div><div><strong style="color:#fff;display:block;margin-bottom:4px">Evaluate Scalability</strong><div style="font-size:.86rem;color:var(--gray-lt);line-height:1.5">Match 4 real scaling scenarios to the correct architectural mitigation strategy.</div></div></div>
+  </div>
+  <div class="hr"></div>
+  <span class="eyebrow">Lab Roadmap</span>
+  <div class="card a3"><div class="roadmap">
+    <div class="rm-item"><div class="rm-dot" id="dot-brief">—</div><div><div class="rm-label" id="lbl-brief">Brief — ContentPilot goes to production</div><div class="rm-sub">What changes when an agent serves 12,000 users per month</div></div></div>
+    <div class="rm-item"><div class="rm-dot" id="dot-dashboard">1</div><div><div class="rm-label" id="lbl-dashboard">Live Dashboard — Identify the anomaly</div><div class="rm-sub">Read 6 live metrics and click the one that has breached its alert threshold</div></div></div>
+    <div class="rm-item"><div class="rm-dot" id="dot-logs">2</div><div><div class="rm-label" id="lbl-logs">Log Analysis — Find the failed response</div><div class="rm-sub">Review 8 reasoning trace entries — one contains a failure. Identify and annotate it.</div></div></div>
+    <div class="rm-item"><div class="rm-dot" id="dot-diagnose">3</div><div><div class="rm-label" id="lbl-diagnose">Diagnose the root cause</div><div class="rm-sub">Classify the failure type and identify which prompt rule was violated or missing</div></div></div>
+    <div class="rm-item"><div class="rm-dot" id="dot-refine">4</div><div><div class="rm-label" id="lbl-refine">Write the prompt fix</div><div class="rm-sub">Choose the correct configuration change from the diff — and explain why it prevents recurrence</div></div></div>
+    <div class="rm-item"><div class="rm-dot" id="dot-scale">5</div><div><div class="rm-label" id="lbl-scale">Scalability evaluation — 4 scenarios</div><div class="rm-sub">Match each scaling failure mode to the correct architectural solution</div></div></div>
+    <div class="rm-item"><div class="rm-dot" id="dot-quiz">—</div><div><div class="rm-label">Knowledge Check · 7 questions · 70% to pass</div></div></div>
+  </div></div>
+</div>
+</div>
+
+<!-- ══════════ BRIEF ══════════ -->
+<div class="section" id="s-brief">
+<div class="wrap">
+  <span class="eyebrow">The Production Reality</span>
+  <h2>ContentPilot Is <span class="red">Live</span></h2>
+  <p class="lead">ContentPilot v1.1 shipped 6 weeks ago. It's now running at 12,400 requests/month across 847 active users. The honeymoon phase is over. Three things are now true that weren't on launch day — and they change everything about how you work.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+    <div class="card" style="padding:20px;margin-bottom:0;border-top:3px solid var(--GA-red)">
+      <div style="font-size:1.6rem;margin-bottom:8px">🔴</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px">Failures Are Silent</div>
+      <div style="font-size:.84rem;color:var(--gray-lt);line-height:1.6">When your agent produces a bad response, most users won't tell you — they'll just leave. Without logging, you only learn about failures from churn data, which is weeks too late.</div>
+    </div>
+    <div class="card" style="padding:20px;margin-bottom:0;border-top:3px solid var(--yellow)">
+      <div style="font-size:1.6rem;margin-bottom:8px">⚡</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px">Scale Amplifies Bugs</div>
+      <div style="font-size:.84rem;color:var(--gray-lt);line-height:1.6">A prompt rule that works 97% of the time produces 372 broken outputs per month at 12,400 requests. A 1-in-1,000 edge case becomes a daily occurrence.</div>
+    </div>
+    <div class="card" style="padding:20px;margin-bottom:0;border-top:3px solid var(--blue)">
+      <div style="font-size:1.6rem;margin-bottom:8px">📊</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px">Drift Is Invisible</div>
+      <div style="font-size:.84rem;color:var(--gray-lt);line-height:1.6">Model providers silently update base models. User input patterns evolve. Your agent's quality drifts without any code change on your end. Only dashboards catch it.</div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--GA-red);margin-bottom:14px">
+    <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--GA-red);margin-bottom:12px">The Monitoring Stack You Need</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div>
+        <div style="font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:8px">What You Measure</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:.87rem;color:var(--gray-lt)">
+          <div>📊 <strong style="color:#fff">Output quality metrics</strong> — specificity score, format adherence, tone alignment</div>
+          <div>⏱ <strong style="color:#fff">Latency percentiles</strong> — P50, P95, P99. P99 is where users rage-quit.</div>
+          <div>💰 <strong style="color:#fff">Token cost per request</strong> — signals prompt bloat and output verbosity drift</div>
+          <div>🚨 <strong style="color:#fff">Error rate by mode</strong> — failures cluster in specific modes, not evenly</div>
+          <div>🔄 <strong style="color:#fff">Memory hit rate</strong> — are users' past contexts being retrieved correctly?</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:8px">What You Log Per Request</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.75rem;background:var(--black3);border-radius:var(--r-lg);padding:12px;color:var(--gray-lt);line-height:1.9">
+          <span style="color:#f472b6">run_id</span>: "cp_20250312_084821_a3f"<br/>
+          <span style="color:#f472b6">mode</span>: "post_ideas"<br/>
+          <span style="color:#f472b6">topic</span>: "[input hash, not raw text]"<br/>
+          <span style="color:#f472b6">latency_ms</span>: 2847<br/>
+          <span style="color:#f472b6">input_tokens</span>: 412<br/>
+          <span style="color:#f472b6">output_tokens</span>: 289<br/>
+          <span style="color:#f472b6">quality_flags</span>: ["specificity_low"]<br/>
+          <span style="color:#f472b6">pipeline_stages</span>: [...]
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>💡 The audit trail principle:</strong> Every agent action that affects a real user or moves real data should produce a log entry you can trace back to. Not just the final output — the reasoning path. If your agent makes a decision and you can't explain <em>why</em> from the logs alone, the system is not auditable.
+  </div>
+
+  <div style="margin-top:24px"><button class="btn btn-red" onclick="markDone('brief');nav('dashboard')">Open the Dashboard →</button></div>
+</div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="section" id="s-dashboard">
+<div class="wrap">
+  <span class="eyebrow">Section 01 · Performance Dashboard</span>
+  <h2>ContentPilot <span class="red">Live Metrics</span></h2>
+  <p class="lead">You arrive at work and open the dashboard. Six metrics are live. One has breached its alert threshold and needs immediate attention. Click the metric that is in a critical state to investigate — then answer the diagnostic question.</p>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--gray-dk)">ContentPilot · Production · Last updated <span id="dashTimestamp">12:00:00</span></div>
+    <div class="time-pills">
+      <div class="time-pill active" onclick="setTimeWindow(this,'1h')">1H</div>
+      <div class="time-pill" onclick="setTimeWindow(this,'6h')">6H</div>
+      <div class="time-pill" onclick="setTimeWindow(this,'24h')">24H</div>
+      <div class="time-pill" onclick="setTimeWindow(this,'7d')">7D</div>
+    </div>
+  </div>
+
+  <div class="dash-grid" id="dashGrid"></div>
+
+  <span class="eyebrow" style="margin-top:20px">Alert Feed</span>
+  <div class="alert-feed" id="alertFeed"></div>
+
+  <div id="dashQ" style="display:none;margin-top:24px"></div>
+  <div id="dashNext" style="display:none;margin-top:16px">
+    <button class="btn btn-red" onclick="nav('logs')">Investigate the Logs →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ LOGS ══════════ -->
+<div class="section" id="s-logs">
+<div class="wrap">
+  <span class="eyebrow">Section 02 · Log Analysis</span>
+  <h2>Reasoning <span class="red">Trace Review</span></h2>
+  <p class="lead">Below is ContentPilot's reasoning log for the last hour — 8 entries. One of these requests failed silently: the user received a response, but the agent violated a core system prompt rule. Click through each entry to read the full trace. Find the failure and mark it.</p>
+
+  <div class="callout callout-warn" style="margin-bottom:16px">
+    <strong>⚠️ Silent failures</strong> are the hardest to catch — the agent returned HTTP 200 and the user got <em>something</em>. The failure is in the reasoning trace: a rule was skipped, a wrong path was taken, or a constraint was not honored. Expand each log entry to read the full trace.
+  </div>
+
+  <div class="log-shell">
+    <div class="log-titlebar">
+      <div class="log-dot" style="background:#ff5f57"></div>
+      <div class="log-dot" style="background:#febc2e;margin-left:6px"></div>
+      <div class="log-dot" style="background:#28c840;margin-left:6px"></div>
+      <span class="log-name">contentpilot · reasoning-trace.log · 2026-03-12</span>
+      <div class="log-filter-pills" style="margin-left:auto">
+        <div class="lf-pill active" onclick="filterLog('all',this)">ALL</div>
+        <div class="lf-pill" onclick="filterLog('error',this)">ERROR</div>
+        <div class="lf-pill" onclick="filterLog('warn',this)">WARN</div>
+        <div class="lf-pill" onclick="filterLog('info',this)">INFO</div>
+      </div>
+    </div>
+    <div class="log-entries" id="logEntries"></div>
+  </div>
+
+  <div id="logAnnotation" class="log-annotation" style="border-radius:var(--r-lg);margin-top:8px"></div>
+
+  <div id="logQ" style="display:none;margin-top:20px"></div>
+  <div id="logNext" style="display:none;margin-top:16px">
+    <button class="btn btn-red" onclick="nav('diagnose')">Diagnose the Root Cause →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ DIAGNOSE ══════════ -->
+<div class="section" id="s-diagnose">
+<div class="wrap">
+  <span class="eyebrow">Section 03 · Root Cause Analysis</span>
+  <h2>Diagnose the <span class="red">Failure</span></h2>
+  <p class="lead">You've found the failed log entry. Now apply structured root cause analysis — the same method used in production incident reviews. Answer both questions to build a complete RCA.</p>
+
+  <div class="card" style="border-left:4px solid var(--GA-red);margin-bottom:20px">
+    <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--GA-red);margin-bottom:10px">The Failed Entry (Log #6)</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.79rem;background:var(--black3);border-radius:var(--r-lg);padding:14px;line-height:1.9;color:var(--gray-lt)">
+      <span style="color:#f472b6">run_id</span>: "cp_20260312_113042_e7b"<br/>
+      <span style="color:#f472b6">mode</span>: "summary"<br/>
+      <span style="color:#f472b6">user_input</span>: "Can you summarize the AI safety report?"<br/>
+      <span style="color:#f472b6">input_text_provided</span>: <span style="color:#fca5a5">false</span><br/>
+      <span style="color:#f472b6">stage[3]</span>: LLM_CALL initiated<br/>
+      <span style="color:#fca5a5">stage[3] reasoning</span>: "User requested summary. Proceeding with general knowledge about AI safety."<br/>
+      <span style="color:#fca5a5">output</span>: "AI safety focuses on ensuring that artificial intelligence systems behave as intended…"<br/>
+      <span style="color:#f472b6">quality_flags</span>: ["hallucination_risk", "rule_violation_no_text_check"]<br/>
+      <span style="color:#f472b6">rule_checked</span>: <span style="color:#fca5a5">"ASK_FOR_TEXT_IF_MISSING": NOT_EVALUATED</span>
+    </div>
+  </div>
+
+  <div class="card card-rb" style="margin-bottom:14px">
+    <div style="font-size:.82rem;font-weight:700;color:var(--gray-dk);margin-bottom:12px">QUESTION 1 OF 2 · Failure Classification</div>
+    <div class="quiz-q" style="font-size:1.15rem;margin-bottom:16px">Which failure category best describes what happened in this trace?</div>
+    <div id="diagnoseQ1"></div>
+    <div class="mcq-fb" id="dFB1"></div>
+  </div>
+
+  <div class="card card-rb" id="diagnoseQ2wrap" style="display:none;margin-bottom:14px">
+    <div style="font-size:.82rem;font-weight:700;color:var(--gray-dk);margin-bottom:12px">QUESTION 2 OF 2 · Root Cause</div>
+    <div class="quiz-q" style="font-size:1.15rem;margin-bottom:16px">What is the root cause — the specific thing missing in the pipeline that allowed this failure?</div>
+    <div id="diagnoseQ2"></div>
+    <div class="mcq-fb" id="dFB2"></div>
+  </div>
+
+  <div id="diagnoseNext" style="display:none;margin-top:16px">
+    <button class="btn btn-red" onclick="markDone('diagnose');nav('refine')">Write the Fix →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ REFINE ══════════ -->
+<div class="section" id="s-refine">
+<div class="wrap">
+  <span class="eyebrow">Section 04 · Prompt Refinement</span>
+  <h2>Write the <span class="red">Configuration Fix</span></h2>
+  <p class="lead">You've diagnosed the failure. Now prescribe the fix. Below are three proposed changes to ContentPilot's pipeline and system prompt. Only one correctly prevents the failure from recurring <em>without</em> breaking the working modes. Select it, then review the diff.</p>
+
+  <div class="callout callout-purple" style="margin-bottom:20px">
+    <strong>🔮 Good fixes are surgical.</strong> The best prompt fix is the smallest change that closes the gap — not a full rewrite. Over-engineering a fix for one failure mode often introduces new failure modes. Read each option carefully.
+  </div>
+
+  <div id="refineOpts"></div>
+  <div class="mcq-fb" id="refineFB"></div>
+
+  <div id="refineDiff" style="display:none">
+    <div class="hr" style="margin:20px 0"/>
+    <span class="eyebrow">Approved Change — Diff View</span>
+    <div class="diff-wrap">
+      <div class="diff-head">
+        <div style="width:9px;height:9px;border-radius:50%;background:#ff5f57"></div>
+        <div style="width:9px;height:9px;border-radius:50%;background:#febc2e;margin-left:5px"></div>
+        <div style="width:9px;height:9px;border-radius:50%;background:#28c840;margin-left:5px"></div>
+        <span style="margin-left:10px">system_prompt.txt · proposed v1.2 patch</span>
+        <span style="margin-left:auto;background:rgba(34,197,94,.15);color:var(--green);padding:2px 8px;border-radius:3px;font-size:.68rem;font-weight:700">+4 lines / -0 lines</span>
+      </div>
+      <div class="diff-content" id="diffContent"></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:10px">Why This Fix Works</div>
+      <div style="font-size:.9rem;color:var(--gray-lt);line-height:1.75">
+        The original system prompt said <em>"If no text is provided for a Summary request, ask for the text before responding."</em> This was a soft instruction the model could skip when it had general knowledge about the topic. The patch adds two things:
+        <ul style="margin:10px 0 10px 20px;display:flex;flex-direction:column;gap:8px">
+          <li><strong style="color:#fff">A pre-flight validation check</strong> at pipeline Stage 1 (input validation) — before the LLM is called, the orchestrator code checks <code style="font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--black3);padding:1px 5px;border-radius:3px">if mode === 'summary' and input_text is empty → reject with prompt</code>.</li>
+          <li><strong style="color:#fff">A strengthened system prompt rule</strong> that classifies proceeding without text as a CRITICAL violation with an explicit stop signal — removing any model ambiguity.</li>
+        </ul>
+        This closes the gap at two layers (code + prompt), which means the fix is robust even if the model provider updates the base model and the soft instruction drifts.
+      </div>
+    </div>
+
+    <div style="margin-top:16px"><button class="btn btn-red" onclick="markDone('refine');nav('scale')">Evaluate Scalability →</button></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ SCALE ══════════ -->
+<div class="section" id="s-scale">
+<div class="wrap">
+  <span class="eyebrow">Section 05 · Scalability Evaluation</span>
+  <h2>Match Failures to <span class="red">Mitigations</span></h2>
+  <p class="lead">As ContentPilot grows to 100,000 requests/month, four new failure modes emerge — each requiring a different architectural response. Select a mitigation strategy from the pool, then click a scenario to apply it. Match all 4 correctly.</p>
+
+  <div class="callout callout-tip" style="margin-bottom:20px">
+    <strong>💡 Strategy:</strong> Click a strategy chip to select it (it turns red), then click the scenario you want to apply it to. If wrong, the chip returns to the pool. Match all 4 to proceed.
+  </div>
+
+  <div style="font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:8px">Strategy Pool — Select a strategy, then click a scenario</div>
+  <div class="strategy-pool" id="strategyPool"></div>
+
+  <div class="scale-grid" id="scaleGrid"></div>
+
+  <div class="mcq-fb" id="scaleFB" style="margin-top:8px"></div>
+  <div id="scaleNext" style="display:none;margin-top:16px">
+    <div class="callout callout-success"><strong>✓ All 4 scenarios matched!</strong> You've mapped the correct mitigation to each scaling failure mode. These patterns form the core of a production-ready agent architecture.</div>
+    <div style="margin-top:14px"><button class="btn btn-red" onclick="markDone('scale');nav('quiz')">Proceed to Knowledge Check →</button></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ QUIZ ══════════ -->
+<div class="section" id="s-quiz">
+<div class="wrap">
+  <span class="eyebrow">Knowledge Check</span>
+  <h2>7 <span class="red">Questions</span></h2>
+  <p class="lead">Covering dashboards, log analysis, root cause diagnosis, prompt refinement, and scalability. 70% to pass.</p>
+  <div id="quizActive">
+    <div class="qz-meta"><span id="qMeta">Question 1 of 7</span><span id="qScoreTxt">Score: 0 / 0</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="qProg" style="width:0%"></div></div>
+    <div class="card card-rb">
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="q-opts" id="quizOpts"></div>
+      <div class="fb-box" id="quizFB"></div>
+      <button class="btn btn-red" id="qNextBtn" style="display:none" onclick="nextQ()">Continue →</button>
+    </div>
+  </div>
+  <div id="quizDone" style="display:none">
+    <div class="card card-rb">
+      <h3 style="font-size:1.2rem;margin-bottom:8px">Quiz Complete <span id="qBadge"></span></h3>
+      <p id="qMsg" style="font-size:.95rem;color:var(--gray-lt);margin-bottom:20px;line-height:1.7"></p>
+      <button class="btn-green" onclick="markDone('quiz');buildResults();nav('results')">See My Results →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ RESULTS ══════════ -->
+<div class="section" id="s-results">
+<div class="wrap">
+  <span class="eyebrow">Lab Debrief</span>
+  <h2>Monitoring & Orchestration <span class="red">Complete</span></h2>
+  <div id="resultsBody"></div>
+</div>
+</div>
+
+<!-- ══════════════════ JS ══════════════════ -->
+<script>
+const ALL_SECS=['intro','brief','dashboard','logs','diagnose','refine','scale','quiz','results'];
+let completed=new Set(), sectionScores={};
+function nav(id){
+  ALL_SECS.forEach(s=>{
+    document.getElementById('s-'+s).classList.remove('active');
+    const t=document.getElementById('t-'+s);if(t)t.classList.remove('active');
+  });
+  document.getElementById('s-'+id).classList.add('active');
+  const t=document.getElementById('t-'+id);if(t)t.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='dashboard'&&!dashBuilt) buildDashboard();
+  if(id==='logs'&&!logsBuilt) buildLogs();
+  if(id==='diagnose'&&!diagBuilt) buildDiagnose();
+  if(id==='refine'&&!refineBuilt) buildRefine();
+  if(id==='scale'&&!scaleBuilt) buildScale();
+  if(id==='quiz'&&!qStarted) initQuiz();
+}
+function markDone(key){
+  completed.add(key);
+  document.getElementById('progressChip').textContent=completed.size+' / 5';
+  const d=document.getElementById('dot-'+key),l=document.getElementById('lbl-'+key);
+  if(d){d.className='rm-dot done';d.textContent='✓';}
+  if(l)l.className='rm-label done';
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────────────────────
+let dashBuilt=false, dashAnswered=false, dashTick=0;
+const METRICS_DEF=[
+  {id:'latency',label:'P95 Latency',unit:'ms',val:2140,target:2000,thresh:2000,status:'crit',color:'var(--GA-red)',
+   spark:[1820,1890,1950,1970,2010,2080,2140],delta:'+18% from baseline',
+   tooltip:'P95 latency has breached the 2,000ms SLA. 5% of users are waiting over 2.1 seconds — the threshold at which task-abandonment rates spike.',
+   isCrit:true},
+  {id:'error_rate',label:'Error Rate',unit:'%',val:0.8,target:1.0,thresh:1.0,status:'normal',color:'var(--green)',
+   spark:[1.1,0.9,0.8,0.7,0.9,0.8,0.8],delta:'Stable',tooltip:'Error rate is within acceptable range. Most errors are client-side timeouts, not agent failures.',isCrit:false},
+  {id:'specificity',label:'Idea Specificity',unit:'%',val:81,target:80,thresh:80,status:'normal',color:'var(--green)',
+   spark:[54,62,71,76,79,80,81],delta:'+27pts since v1.0',tooltip:'Specificity is above target following the v1.1 system prompt fix. Continue monitoring for drift.',isCrit:false},
+  {id:'token_cost',label:'Avg Tokens/Request',unit:'tok',val:687,target:700,thresh:700,status:'normal',color:'var(--green)',
+   spark:[701,695,688,691,684,689,687],delta:'-2% MoM',tooltip:'Token cost is stable and below budget threshold. No action required.',isCrit:false},
+  {id:'memory_hit',label:'Memory Hit Rate',unit:'%',val:74,target:70,thresh:70,status:'normal',color:'var(--teal)',
+   spark:[61,64,67,70,71,73,74],delta:'+13pts since buffer add',tooltip:'Memory retrieval is improving. Users\' prior context is being correctly surfaced in most sessions.',isCrit:false},
+  {id:'format_adh',label:'Format Adherence',unit:'%',val:85,target:80,thresh:80,status:'normal',color:'var(--green)',
+   spark:[68,72,77,79,82,84,85],delta:'+17pts since v1.0',tooltip:'Format adherence is healthy. Platform-specific formatting is being applied consistently.',isCrit:false},
+];
+
+function buildDashboard(){
+  dashBuilt=true;
+  const grid=document.getElementById('dashGrid');
+  METRICS_DEF.forEach(m=>{
+    const pct=Math.min(100,Math.round((m.val/(m.thresh*1.5))*100));
+    const col=m.status==='crit'?'var(--GA-red)':m.status==='warn'?'var(--yellow)':'var(--green)';
+    const div=document.createElement('div');
+    div.className='dash-tile '+m.status; div.id='dt-'+m.id;
+    div.dataset.crit=m.isCrit;
+    div.innerHTML=`<div class="selected-ring"></div>
+      <div class="dash-val" style="color:${col}">${m.val}<span style="font-size:1rem;font-weight:600;color:${col}">${m.unit}</span></div>
+      <div class="dash-lbl">${m.label}<br/><span>Target: &lt;${m.thresh}${m.unit}</span></div>
+      <svg class="dash-sparkline" viewBox="0 0 80 28" preserveAspectRatio="none">
+        <polyline points="${m.spark.map((v,i)=>`${i*(80/6)},${28-((v-Math.min(...m.spark))/(Math.max(...m.spark)-Math.min(...m.spark)+1))*24}`).join(' ')}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="dash-bar"><div class="dash-fill" style="width:0%;background:${col}" data-w="${pct}"></div></div>
+      <div class="dash-meta"><span style="color:${col}">${m.delta}</span><span class="dash-badge" style="background:${col}22;color:${col}">${m.status.toUpperCase()}</span></div>`;
+    div.addEventListener('click',()=>selectMetric(m.id,m.isCrit,m.tooltip));
+    grid.appendChild(div);
+  });
+  setTimeout(()=>document.querySelectorAll('.dash-fill').forEach(b=>b.style.width=b.dataset.w+'%'),150);
+  buildAlertFeed();
+  updateTimestamp();
+  setInterval(tickDash,4000);
+}
+function updateTimestamp(){
+  const now=new Date();
+  document.getElementById('dashTimestamp').textContent=now.toTimeString().split(' ')[0];
+}
+let selectedMetricId=null;
+function selectMetric(id,isCrit,tooltip){
+  document.querySelectorAll('.dash-tile').forEach(t=>t.classList.remove('selected'));
+  document.getElementById('dt-'+id).classList.add('selected');
+  selectedMetricId=id;
+  if(!dashAnswered) showDashQ(id,isCrit,tooltip);
+}
+function setTimeWindow(el){document.querySelectorAll('.time-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
+function showDashQ(id,isCrit,tooltip){
+  const el=document.getElementById('dashQ'); el.style.display='block';
+  if(isCrit){
+    // Correct — show drill-down
+    el.innerHTML=`<div class="callout callout-red"><strong>🔴 Anomaly confirmed — ${METRICS_DEF.find(m=>m.id===id).label}</strong><br/>${tooltip}</div>
+    <div style="margin-top:12px;font-size:.82rem;font-weight:700;color:var(--gray-dk);margin-bottom:10px">What is the most likely root cause of a P95 latency spike on a production LLM agent?</div>
+    <div id="dashMCQ"></div>`;
+    const opts=[
+      {k:'A',t:'The model provider updated their base model — new models run slower.',ans:false,fb:'Model updates can affect latency, but providers rarely make updates that slow inference. And the spike pattern (gradual increase over 6 hours) suggests a local cause, not a sudden provider change.'},
+      {k:'B',t:'System prompt length grew over time (prompt versioning without token auditing) — longer prompts = more tokens to process every request.',ans:true,fb:'Correct. This is the most common cause of latency creep in production agents. Prompts grow via iteration — each fix adds lines — without anyone auditing total token count. More input tokens = longer prefill time = higher latency. The fix: audit prompt size, compress verbose instructions, add a max_tokens cap on input, and set a token budget alert.'},
+      {k:'C',t:'Too many users are using Post Ideas mode simultaneously.',ans:false,fb:'Concurrent usage affects throughput (queuing delay), not per-request latency. P95 latency is measured per-request — it would spike and recover with traffic bursts, not show the steady upward drift pattern visible in the sparkline.'},
+      {k:'D',t:'The memory retrieval step is returning too many context turns.',ans:false,fb:'Memory retrieval adds tokens, which can contribute to latency — but it typically adds 50–100 tokens, which is insufficient to cause a 18% latency increase. The magnitude of this spike points to systemic prompt bloat, not the memory step alone.'},
+    ];
+    renderMCQ(document.getElementById('dashMCQ'),opts,(ok)=>{
+      dashAnswered=true;
+      sectionScores.dashboard={earned:ok?2:1,possible:2};
+      markDone('dashboard');
+      document.getElementById('dashNext').style.display='block';
+    });
+  } else {
+    // Wrong metric selected
+    el.innerHTML=`<div class="callout callout-warn"><strong>⚠️ Not the anomaly.</strong> ${tooltip} — This metric is currently within acceptable range. Look for the metric in a <strong style="color:var(--GA-red)">critical (red) state</strong> that has breached its threshold.</div>`;
+  }
+}
+function tickDash(){
+  dashTick++;
+  updateTimestamp();
+  // Slightly drift the latency tile to simulate live data
+  const m=METRICS_DEF.find(x=>x.id==='latency');
+  const jitter=Math.floor(Math.random()*40-20);
+  m.val=Math.max(2000,m.val+jitter);
+  const tile=document.getElementById('dt-latency');
+  if(tile)tile.querySelector('.dash-val').innerHTML=`${m.val}<span style="font-size:1rem;font-weight:600;color:var(--GA-red)">ms</span>`;
+  // Add a new alert occasionally
+  if(dashTick%2===0) addAlert();
+}
+const ALERT_TEMPLATES=[
+  {sev:'crit',msg:'<strong>P95 latency</strong> holding above SLA (2,000ms). Duration: 6h 14m. Investigate prompt size.'},
+  {sev:'warn',msg:'<strong>Token cost</strong> increased 3% in last 30m — monitor for prompt bloat.'},
+  {sev:'info',msg:'<strong>Memory hit rate</strong> reached 74% — new monthly high.'},
+  {sev:'warn',msg:'<strong>Error rate</strong> 1.1% spike on X Thread mode — investigating.'},
+  {sev:'info',msg:'<strong>Format adherence</strong> stable at 85%. No action required.'},
+  {sev:'crit',msg:'<strong>P95 latency</strong> 2,180ms — breaching SLA. 5% of users affected.'},
+];
+let alertIdx=0;
+function buildAlertFeed(){ALERT_TEMPLATES.slice(0,3).forEach(a=>addAlertItem(a));}
+function addAlert(){const a=ALERT_TEMPLATES[alertIdx%ALERT_TEMPLATES.length];alertIdx++;addAlertItem(a);}
+function addAlertItem(a){
+  const feed=document.getElementById('alertFeed');
+  const now=new Date();const ts=now.toTimeString().split(' ')[0];
+  const div=document.createElement('div');div.className='alert-item';
+  div.innerHTML=`<span class="alert-ts">${ts}</span><span class="alert-sev ${a.sev}">${a.sev.toUpperCase()}</span><span class="alert-msg">${a.msg}</span>`;
+  feed.insertBefore(div,feed.firstChild);
+  if(feed.children.length>12)feed.removeChild(feed.lastChild);
+}
+
+// ─── LOGS ─────────────────────────────────────────────────────────────────────
+let logsBuilt=false, logAnswered=false;
+const LOG_ENTRIES=[
+  {ts:'11:02:14',level:'info',msg:'run_id: cp_20260312_110214_a1c | mode: post_ideas | latency: 2,310ms | quality: OK | tokens: 672',
+   trace:`stage[1]: INPUT_VALIDATION passed — topic: "remote work productivity", audience: "startup founders", mode: "post_ideas"
+stage[2]: MEMORY_RETRIEVAL — 2 prior topics retrieved for context
+stage[3]: PROMPT_CONSTRUCTION — system_prompt v1.1 + user_context assembled (687 tokens)
+stage[4]: LLM_CALL — model: claude-sonnet, temp: 0.7
+  reasoning: "User wants post ideas for startup founders. Topic: remote work productivity. 
+  Generating specific, angle-driven ideas with hook elements as required."
+stage[5]: OUTPUT_VALIDATION — specificity check: PASS (7 ideas, all contain specific angle)
+stage[6]: FORMATTING — platform: general, structure: numbered list
+stage[7]: DELIVERY — 200 OK, 2,310ms
+stage[8]: LOGGING — interaction stored, memory updated`,fail:false},
+  {ts:'11:14:33',level:'info',msg:'run_id: cp_20260312_111433_b2d | mode: linkedin | latency: 1,890ms | quality: OK | tokens: 589',
+   trace:`stage[1]: INPUT_VALIDATION passed — topic: "why I quit using to-do lists", audience: "productivity enthusiasts"
+stage[2]: MEMORY_RETRIEVAL — no prior context for this user
+stage[3]: PROMPT_CONSTRUCTION — assembled (604 tokens)
+stage[4]: LLM_CALL — temp: 0.7
+  reasoning: "LinkedIn post requested. Topic is personal angle — strong hook opportunity. 
+  Avoiding 'In today's digital landscape' opener. Using personal story format."
+stage[5]: OUTPUT_VALIDATION — length: 218 words (under 250 limit: PASS). Hook quality: PASS.
+stage[6]: FORMATTING — LinkedIn: PASS
+stage[7]: DELIVERY — 200 OK, 1,890ms
+stage[8]: LOGGING — stored`,fail:false},
+  {ts:'11:28:07',level:'warn',msg:'run_id: cp_20260312_112807_c3e | mode: thread | latency: 2,940ms | quality: DEGRADED | tokens: 1,104',
+   trace:`stage[1]: INPUT_VALIDATION passed — topic: "AI tools for small business", audience: "SMB owners"
+stage[2]: MEMORY_RETRIEVAL — 6 prior context items loaded (large context)
+stage[3]: PROMPT_CONSTRUCTION — context unusually large: 1,102 tokens
+  [WARN] Token budget approaching limit. Prompt size 57% larger than median.
+stage[4]: LLM_CALL — latency: 2,940ms (above P95 threshold of 2,000ms)
+  reasoning: "Thread requested. Generating 6-tweet thread with hook and payload structure."
+stage[5]: OUTPUT_VALIDATION — tweet length check: 5/6 tweets within 280 chars (PASS). Tweet 4: 312 chars [WARN]
+stage[6]: FORMATTING — trimmed tweet 4 to 280 chars via post-processing
+stage[7]: DELIVERY — 200 OK (degraded latency)
+stage[8]: LOGGING — quality_flag: "latency_degraded", "context_size_high"`,fail:false},
+  {ts:'11:36:49',level:'info',msg:'run_id: cp_20260312_113649_d4f | mode: hook | latency: 1,650ms | quality: OK | tokens: 441',
+   trace:`stage[1]: INPUT_VALIDATION passed — topic: "burnout in high performers", audience: "executives"
+stage[2]: MEMORY_RETRIEVAL — 1 prior context item
+stage[3]: PROMPT_CONSTRUCTION — 458 tokens
+stage[4]: LLM_CALL — temp: 0.7
+  reasoning: "Hook requested. Three variants required: data-driven, curiosity-gap, personal story.
+  Topic is emotionally resonant — strong personal story angle available."
+stage[5]: OUTPUT_VALIDATION — 3 hooks produced, all labeled by type, all under 25 words: PASS
+stage[6]: FORMATTING — PASS
+stage[7]: DELIVERY — 200 OK, 1,650ms
+stage[8]: LOGGING — stored`,fail:false},
+  {ts:'11:51:22',level:'info',msg:'run_id: cp_20260312_115122_e5g | mode: post_ideas | latency: 2,180ms | quality: OK | tokens: 698',
+   trace:`stage[1]: INPUT_VALIDATION passed — topic: "content marketing for SaaS", audience: "B2B marketers"
+stage[2]: MEMORY_RETRIEVAL — 3 prior topics retrieved
+stage[3]: PROMPT_CONSTRUCTION — 714 tokens
+stage[4]: LLM_CALL — temp: 0.7
+  reasoning: "Post ideas for B2B marketers on SaaS content marketing. Generating specific 
+  angle-driven ideas per v1.1 specificity rules."
+stage[5]: OUTPUT_VALIDATION — 6 ideas, specificity check: 5/6 PASS, 1 marginally generic [acceptable]
+stage[6]: FORMATTING — numbered list, PASS
+stage[7]: DELIVERY — 200 OK, 2,180ms
+stage[8]: LOGGING — stored`,fail:false},
+  {ts:'11:30:42',level:'error',msg:'run_id: cp_20260312_113042_e7b | mode: summary | latency: 1,480ms | quality: FAIL | quality_flags: hallucination_risk, rule_violation',
+   trace:`stage[1]: INPUT_VALIDATION — topic received: "Can you summarize the AI safety report?"
+  [WARN] mode is "summary" — input_text field: EMPTY
+  [EXPECTED ACTION: Reject with 'Please paste the text you want summarized']
+  [ACTUAL ACTION: Validation stage did not enforce summary-mode text requirement — passed to stage 3]
+stage[2]: MEMORY_RETRIEVAL — no prior context
+stage[3]: PROMPT_CONSTRUCTION — assembled without input text
+stage[4]: LLM_CALL — initiated without source text
+  reasoning: "User requested summary. No text provided, but topic mentions 'AI safety report'.
+  Proceeding with general knowledge about AI safety to fulfill the request."
+  [RULE VIOLATION: system_prompt rule 'ASK_FOR_TEXT_IF_MISSING' was present but not evaluated]
+  [ROOT CAUSE: Validation pre-flight check absent from orchestrator code]
+stage[5]: OUTPUT_VALIDATION — content check: PASS (no profanity, no PII)
+  [MISSED CHECK: hallucination_risk flag not set by content check — only set by downstream quality scorer]
+stage[6]: FORMATTING — PASS
+stage[7]: DELIVERY — 200 OK (user received hallucinated summary)
+  quality_scorer (async, post-delivery): hallucination_risk=HIGH, rule_violation=rule_4_not_enforced
+stage[8]: LOGGING — quality_flags: ["hallucination_risk", "rule_violation_no_text_check"]`,fail:true},
+  {ts:'12:02:18',level:'info',msg:'run_id: cp_20260312_120218_f8h | mode: summary | latency: 1,720ms | quality: OK | tokens: 512',
+   trace:`stage[1]: INPUT_VALIDATION passed — input_text: 847 words provided
+stage[2]: MEMORY_RETRIEVAL — no prior context
+stage[3]: PROMPT_CONSTRUCTION — input text embedded (1,104 tokens total)
+stage[4]: LLM_CALL — temp: 0.7
+  reasoning: "Summary requested with full text provided. Extracting key insight for first sentence, 
+  supporting context, and practical implication as per system prompt rules."
+stage[5]: OUTPUT_VALIDATION — format: 4 sentences (within 3–5 range): PASS. Key insight in first sentence: PASS.
+stage[6]: FORMATTING — PASS
+stage[7]: DELIVERY — 200 OK, 1,720ms
+stage[8]: LOGGING — stored`,fail:false},
+  {ts:'12:11:55',level:'info',msg:'run_id: cp_20260312_121155_g9i | mode: post_ideas | latency: 2,240ms | quality: OK | tokens: 701',
+   trace:`stage[1]: INPUT_VALIDATION passed — topic: "personal finance for millennials", audience: "25–35 year olds"
+stage[2]: MEMORY_RETRIEVAL — 4 prior items
+stage[3]: PROMPT_CONSTRUCTION — 719 tokens
+stage[4]: LLM_CALL — temp: 0.7
+  reasoning: "Post ideas for millennial personal finance audience. Generating 7 specific ideas 
+  with hook elements and narrative forms per v1.1 rules."
+stage[5]: OUTPUT_VALIDATION — 7 ideas, all specific with angles: PASS
+stage[6]: FORMATTING — PASS
+stage[7]: DELIVERY — 200 OK, 2,240ms
+stage[8]: LOGGING — stored`,fail:false},
+];
+
+let logFilter='all', openLogIdx=null;
+function buildLogs(){
+  logsBuilt=true; renderLog();
+}
+function filterLog(f,el){
+  logFilter=f;
+  document.querySelectorAll('.lf-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderLog();
+}
+function renderLog(){
+  const el=document.getElementById('logEntries'); el.innerHTML='';
+  const entries=logFilter==='all'?LOG_ENTRIES:logFilter==='error'?LOG_ENTRIES.filter(e=>e.level==='error'):logFilter==='warn'?LOG_ENTRIES.filter(e=>e.level==='warn'||e.level==='error'):LOG_ENTRIES.filter(e=>e.level==='info');
+  entries.forEach((entry,i)=>{
+    const realIdx=LOG_ENTRIES.indexOf(entry);
+    const rowDiv=document.createElement('div');
+    rowDiv.className='log-row'+(entry.fail?' highlight-fail':entry.level==='warn'?' highlight-warn':'');
+    rowDiv.id='lr-'+realIdx;
+    rowDiv.innerHTML=`<div class="log-gutter">${realIdx+1}</div>
+      <div class="log-body">
+        <div class="log-ts">${entry.ts} +00:00</div>
+        <span class="log-level level-${entry.level}">${entry.level.toUpperCase()}</span><span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gray-lt)">${entry.msg}</span>
+        <div class="log-trace" id="lt-${realIdx}">
+          ${entry.trace.replace(/(stage\[\d+\])/g,'<span class="trace-key">$1</span>')
+            .replace(/(\[RULE VIOLATION[^\]]*\]|\[ACTUAL ACTION[^\]]*\]|\[ROOT CAUSE[^\]]*\]|\[MISSED CHECK[^\]]*\])/g,'<span class="trace-err">$1</span>')
+            .replace(/(\[WARN\][^\n]*)/g,'<span class="trace-warn">$1</span>')
+            .replace(/(\[EXPECTED ACTION[^\]]*\])/g,'<span class="trace-warn">$1</span>')}
+        </div>
+      </div>`;
+    rowDiv.querySelector('.log-body').addEventListener('click',()=>toggleTrace(realIdx,entry));
+    el.appendChild(rowDiv);
+  });
+}
+function toggleTrace(idx,entry){
+  const trace=document.getElementById('lt-'+idx);
+  const isOpen=trace.classList.contains('open');
+  document.querySelectorAll('.log-trace').forEach(t=>t.classList.remove('open'));
+  document.querySelectorAll('.log-row').forEach(r=>r.classList.remove('selected'));
+  if(!isOpen){
+    trace.classList.add('open');
+    document.getElementById('lr-'+idx).classList.add('selected');
+    if(entry.fail&&!logAnswered) setTimeout(()=>showLogQ(),300);
+  }
+}
+function showLogQ(){
+  const ann=document.getElementById('logAnnotation');
+  ann.className='log-annotation show';
+  ann.innerHTML=`<strong>🔴 Failure detected in Log Entry #6</strong> — run_id <code style="font-family:'JetBrains Mono',monospace;font-size:.82rem;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px">cp_20260312_113042_e7b</code>. The agent bypassed the input validation check for Summary mode and called the LLM without source text, producing a hallucinated response.<br/><br/>Click below to confirm this is the failure entry.`;
+
+  const el=document.getElementById('logQ'); el.style.display='block';
+  el.innerHTML=`<div style="font-size:.82rem;font-weight:700;color:var(--gray-dk);margin-bottom:10px">What type of failure is this?</div>`;
+  const opts=[
+    {k:'A',t:'A model error — the LLM made a reasoning mistake.',ans:false,fb:'The LLM did exactly what it was set up to do given the inputs it received. The failure wasn\'t in the model\'s reasoning — it was in the pipeline orchestration that allowed the LLM to be called without the required input.'},
+    {k:'B',t:'A pipeline orchestration failure — the input validation stage did not enforce a system prompt rule before calling the LLM.',ans:true,fb:'Correct. This is a classic orchestration failure: a rule existed in the system prompt, but there was no enforcement code in the pipeline to catch the violating condition before inference. The model\'s behavior was predictable given the missing text — the blame is on the orchestration layer, not the model.'},
+    {k:'C',t:'A network error — the request timed out and fell back to a cached response.',ans:false,fb:'The latency was 1,480ms and the response was 200 OK — there was no timeout or fallback. The request completed successfully from an HTTP perspective; the failure was in output quality.'},
+    {k:'D',t:'A configuration error — the wrong model version was called.',ans:false,fb:'The reasoning trace shows the correct model was called. The issue is upstream: the orchestrator should have rejected the request at Stage 1 before any model call occurred.'},
+  ];
+  renderMCQ(el,opts,(ok)=>{
+    logAnswered=true;
+    sectionScores.logs={earned:ok?1:0,possible:1};
+    markDone('logs');
+    document.getElementById('logNext').style.display='block';
+  });
+}
+
+// ─── DIAGNOSE ─────────────────────────────────────────────────────────────────
+let diagBuilt=false, d1Answered=false, d2Answered=false;
+function buildDiagnose(){
+  diagBuilt=true;
+  const el1=document.getElementById('diagnoseQ1');
+  const Q1=[
+    {k:'A',t:'Model hallucination — the LLM generated false information without being prompted to do so.',ans:false,fb:'Hallucination describes an output failure — but it\'s a symptom here, not the root cause category. The model hallucinated because the pipeline sent it an empty input context. Calling this a model hallucination misattributes responsibility and leads to the wrong fix (e.g., switching models instead of fixing the pipeline).'},
+    {k:'B',t:'Missing pre-flight validation — the orchestration layer failed to enforce a system prompt constraint before invoking the LLM.',ans:true,fb:'Correct. The failure category is orchestration gap. The system prompt rule existed and was correctly worded — but it relied on the model checking itself rather than the pipeline enforcing it. This is a structural gap: rules that affect safety or data quality should be enforced in code, not left as model instructions alone.'},
+    {k:'C',t:'Prompt injection — a malicious user input manipulated the agent\'s reasoning path.',ans:false,fb:'Prompt injection involves an adversarial input designed to override instructions. This was a benign user request — the user simply didn\'t provide the text, and the agent should have asked for it. There\'s no evidence of adversarial intent in the trace.'},
+    {k:'D',t:'Rate limiting — the system was under load and skipped a validation step.',ans:false,fb:'Rate limiting causes queuing delays or 429 errors — it doesn\'t selectively skip validation steps. The trace shows no load indicators, and the latency was actually below average (1,480ms). The skip was a code-path bug, not a load-related behavior.'},
+  ];
+  renderMCQ(el1,Q1,(ok)=>{
+    d1Answered=true;
+    sectionScores.diagnoseQ1={earned:ok?1:0,possible:1};
+    document.getElementById('diagnoseQ2wrap').style.display='block';
+    setTimeout(()=>document.getElementById('diagnoseQ2wrap').scrollIntoView({behavior:'smooth',block:'nearest'}),200);
+  });
+
+  const el2=document.getElementById('diagnoseQ2');
+  const Q2=[
+    {k:'A',t:'The system prompt rule was poorly worded and the model misinterpreted it.',ans:false,fb:'The rule "If no text is provided for a Summary request, ask for the text before responding" is clearly worded. The model could interpret it correctly when text was absent — but the pipeline didn\'t give it the opportunity to refuse because the check was supposed to happen pre-LLM.'},
+    {k:'B',t:'The output validation stage (Stage 5) should have detected the hallucination before delivery.',ans:false,fb:'Catching the failure at Stage 5 would be better than delivering it — but it\'s not the root cause. Stage 5 didn\'t have a hallucination detection rule that checked for this case. More importantly, the fix should prevent the LLM from being called without text at all — not just catch bad outputs after the fact.'},
+    {k:'C',t:'There was no code in the Stage 1 orchestrator to check: if mode === summary AND input_text === empty → reject before LLM call.',ans:true,fb:'Correct. The root cause is a missing code-level enforcement. The system prompt rule assumed the model would self-enforce — but models occasionally fail to apply conditional rules when they have general knowledge that lets them "fill in" the missing requirement. The orchestrator is the authoritative enforcement layer for preconditions, not the model.'},
+    {k:'D',t:'Memory retrieval (Stage 2) returned an empty context, which confused the LLM.',ans:false,fb:'Stage 2 correctly returned empty (no prior context for this user) — that\'s expected and handled. Empty memory context does not cause the model to skip validation rules. The failure was specifically in Stage 1\'s missing check for the summary-mode text requirement.'},
+  ];
+  renderMCQ(el2,Q2,(ok)=>{
+    d2Answered=true;
+    sectionScores.diagnoseQ2={earned:ok?1:0,possible:1};
+    document.getElementById('diagnoseNext').style.display='block';
+  });
+}
+
+// ─── REFINE ───────────────────────────────────────────────────────────────────
+let refineBuilt=false, refineAnswered=false;
+function buildRefine(){
+  refineBuilt=true;
+  const el=document.getElementById('refineOpts');
+  const opts=[
+    {k:'A',t:'Rewrite the entire system prompt to be more explicit about all edge cases. Add 500 words of new instructions covering every possible missing-input scenario.',ans:false,fb:'Prompt over-engineering. Adding 500 words to fix one edge case balloons token cost per request, increases latency (more input tokens = slower prefill), and often introduces new ambiguities. The rule already existed — the problem was enforcement, not wording.'},
+    {k:'B',t:'Add a Stage 1 orchestrator check: if mode === \'summary\' and input_text is empty → reject with a user-friendly prompt to paste their text. AND reinforce the system prompt rule with an explicit STOP signal.',ans:true,fb:'Correct. This is a surgical two-layer fix: (1) a code-level pre-flight check that stops the LLM call before it happens — this is the authoritative enforcement layer, and (2) a reinforced system prompt that classifies proceeding without text as a CRITICAL violation. Two layers means the fix survives model updates.'},
+    {k:'C',t:'Switch to a larger model (GPT-4o / Claude Opus) that is better at following instructions consistently.',ans:false,fb:'A larger model is more likely to follow the rule — but it doesn\'t guarantee it, and it costs 5–10x more per request. This is a cost-expensive probabilistic improvement, not a deterministic fix. For a safety-critical rule, deterministic enforcement in code is always preferable.'},
+    {k:'D',t:'Add a post-delivery quality scorer that detects hallucinations and automatically retracts responses before users see them.',ans:false,fb:'A post-delivery scorer is a useful monitoring layer — but it\'s a reactive catch, not a prevention. The fix should happen before the LLM is called (Stage 1), not after delivery. Also, "retracting" responses after delivery is technically complex and only works in synchronous interfaces.'},
+  ];
+  renderMCQ(el,opts,(ok)=>{
+    refineAnswered=true;
+    sectionScores.refine={earned:ok?1:0,possible:1};
+    if(ok){
+      showDiff();
+      document.getElementById('refineDiff').style.display='block';
+    }
+  });
+}
+function showDiff(){
+  const lines=[
+    {t:'ctx',n:14,s:' ',txt:'## RULES (never violate)'},
+    {t:'ctx',n:15,s:' ',txt:'1. Never output generic ideas that could describe 1000 articles.'},
+    {t:'ctx',n:16,s:' ',txt:'2. Never start with "Great question!" or filler phrases.'},
+    {t:'ctx',n:17,s:' ',txt:'3. Always include the stated audience\'s perspective.'},
+    {t:'removed',n:18,s:'-',txt:'4. If no text is provided for a Summary request, ask for the text before responding.'},
+    {t:'added',n:18,s:'+',txt:'4. CRITICAL: If mode is "summary" and no input text is provided, you MUST respond'},
+    {t:'added',n:19,s:'+',txt:'   ONLY with: "Please paste the text you\'d like me to summarize." DO NOT'},
+    {t:'added',n:20,s:'+',txt:'   generate a summary from general knowledge. STOP. This is non-negotiable.'},
+    {t:'added',n:21,s:'+',txt:'   [ORCHESTRATOR NOTE: Stage 1 code-level check enforces this before LLM call.]'},
+    {t:'ctx',n:22,s:' ',txt:'5. Default tone: professional-but-human. Adapt if user specifies otherwise.'},
+  ];
+  document.getElementById('diffContent').innerHTML=lines.map(l=>`<div class="diff-line ${l.t}">
+    <span class="diff-num">${l.n}</span>
+    <span class="diff-sign">${l.s}</span>
+    <span class="diff-text">${l.txt.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>
+  </div>`).join('');
+}
+
+// ─── SCALE ────────────────────────────────────────────────────────────────────
+let scaleBuilt=false, scaleMatched={};
+const SCENARIOS=[
+  {id:'s1',num:'SCENARIO 01',title:'Latency Spike at 50k req/month',body:'P95 latency climbs from 2s to 4.8s as request volume doubles. The model provider\'s API is not the bottleneck — internal profiling shows the problem is in prompt assembly time.',correctStrategy:'Prompt Caching',match:'Implementing prompt caching sends the static system prompt as a pre-computed prefix — reducing input token processing time by 60–80% and cutting P95 latency back to baseline.'},
+  {id:'s2',num:'SCENARIO 02',title:'Quality Drift Over 90 Days',body:'Idea Specificity drops from 81% to 67% over 3 months with no code changes. The model provider silently updated the base model in week 6.',correctStrategy:'Eval Suite + Canary Deploys',match:'An automated eval suite runs daily regression tests against 50 golden inputs. Canary deploys test new model versions against the eval suite before routing live traffic — catching drift before users see it.'},
+  {id:'s3',num:'SCENARIO 03',title:'Runaway Token Costs',body:'Monthly LLM cost increases 340% in 8 weeks. Token audit shows input prompts growing from 650 to 2,100 tokens per request as memory retrieval returns more and more context turns.',correctStrategy:'Context Window Management',match:'Implementing a sliding window that limits retrieved memory to the 3 most relevant turns (not all turns) caps input tokens. Combined with a prompt token budget alert at 900 tokens, cost is brought back to baseline.'},
+  {id:'s4',num:'SCENARIO 04',title:'Single Point of Failure',body:'When the LLM provider has a 45-minute outage, ContentPilot goes fully dark. 847 users receive 503 errors with no fallback behavior.',correctStrategy:'Multi-Provider Fallback',match:'Routing logic sends requests to a secondary LLM provider (e.g., OpenAI → Anthropic) when the primary returns 5xx errors. A circuit breaker trips after 5 consecutive failures and reroutes automatically — reducing outage impact from 45min to <30s.'},
+];
+const STRATEGIES=['Prompt Caching','Eval Suite + Canary Deploys','Context Window Management','Multi-Provider Fallback','Rate Limiting','Horizontal Scaling','Output Compression','A/B Prompt Testing'];
+let selectedStrategy=null;
+
+function buildScale(){
+  scaleBuilt=true;
+  // strategy pool
+  const pool=document.getElementById('strategyPool');
+  STRATEGIES.forEach(s=>{
+    const chip=document.createElement('div'); chip.className='strategy-chip'; chip.id='sc-'+s.replace(/\s+/g,'-');
+    chip.textContent=s;
+    chip.addEventListener('click',()=>selectStrategy(s,chip));
+    pool.appendChild(chip);
+  });
+  // scenarios
+  const grid=document.getElementById('scaleGrid');
+  SCENARIOS.forEach(sc=>{
+    const div=document.createElement('div'); div.className='scenario-card'; div.id='ss-'+sc.id;
+    div.innerHTML=`<div class="scenario-num">${sc.num}</div><div class="scenario-title">${sc.title}</div><div class="scenario-body">${sc.body}</div><div class="scenario-match" id="sm-${sc.id}">✓ ${sc.correctStrategy}</div>`;
+    div.addEventListener('click',()=>applyStrategy(sc));
+    grid.appendChild(div);
+  });
+}
+function selectStrategy(s,el){
+  if(el.classList.contains('used'))return;
+  document.querySelectorAll('.strategy-chip').forEach(c=>c.classList.remove('active'));
+  selectedStrategy=s; el.classList.add('active');
+}
+function applyStrategy(sc){
+  if(!selectedStrategy){
+    const fb=document.getElementById('scaleFB'); fb.className='mcq-fb show bad'; fb.innerHTML='<strong>Select a strategy first</strong> — click a chip from the strategy pool above, then click the scenario to apply it.';
+    return;
+  }
+  const card=document.getElementById('ss-'+sc.id);
+  if(card.classList.contains('matched-ok'))return;
+  const correct=selectedStrategy===sc.correctStrategy;
+  if(correct){
+    card.classList.add('matched-ok'); card.querySelector('.scenario-match').textContent=`✓ ${sc.correctStrategy}: ${sc.match}`;
+    scaleMatched[sc.id]=true;
+    document.getElementById('sc-'+selectedStrategy.replace(/\s+/g,'-')).classList.add('used');
+    document.getElementById('sc-'+selectedStrategy.replace(/\s+/g,'-')).classList.remove('active');
+    const fb=document.getElementById('scaleFB'); fb.className='mcq-fb show ok'; fb.innerHTML=`<strong>✓ Correct!</strong> ${sc.match}`;
+    const total=SCENARIOS.filter(s=>scaleMatched[s.id]).length;
+    sectionScores.scale={earned:total,possible:4};
+    if(total===4){markDone('scale');document.getElementById('scaleNext').style.display='block';}
+  } else {
+    card.classList.add('matched-bad');
+    const fb=document.getElementById('scaleFB'); fb.className='mcq-fb show bad'; fb.innerHTML=`<strong>Not quite.</strong> "${selectedStrategy}" doesn\'t address the root cause of this scenario. Read the failure description carefully and think about what layer needs to change.`;
+    setTimeout(()=>{card.classList.remove('matched-bad');},600);
+  }
+  selectedStrategy=null;
+  document.querySelectorAll('.strategy-chip').forEach(c=>c.classList.remove('active'));
+}
+
+// ─── MCQ HELPER ───────────────────────────────────────────────────────────────
+function renderMCQ(container,opts,onDone){
+  let answered=false;
+  const L=['A','B','C','D'];
+  opts.forEach((opt,i)=>{
+    const btn=document.createElement('button'); btn.className='mcq-opt';
+    btn.innerHTML=`<div class="opt-k">${L[i]}</div><div>${opt.t}</div>`;
+    btn.addEventListener('click',()=>{
+      if(answered)return; answered=true;
+      container.querySelectorAll('.mcq-opt').forEach((b,j)=>{
+        b.classList.add('disabled');
+        if(opts[j].ans)b.classList.add('correct');
+        else if(b===btn&&!opt.ans)b.classList.add('wrong');
+      });
+      const fb=document.createElement('div');
+      fb.className='mcq-fb show '+(opt.ans?'ok':'bad');
+      fb.innerHTML=`<strong>${opt.ans?'✓ Correct:':'Not quite:'}</strong> ${opt.fb}`;
+      container.parentElement.appendChild(fb);
+      onDone(opt.ans);
+    });
+    container.appendChild(btn);
+  });
+}
+
+// ─── QUIZ ─────────────────────────────────────────────────────────────────────
+const QUESTIONS=[
+  {q:'What is the most important reason to log the full reasoning trace — not just the final output — for every agent request?',
+   opts:['To comply with data retention regulations','To enable root cause diagnosis when a failure is reported — the trace shows which pipeline stage failed and why, not just that the output was bad','To provide users with transparency about how their content was generated','To calculate accurate token costs for billing purposes'],
+   ans:1,ok:'Correct. The reasoning trace is the difference between knowing a failure happened and knowing why. Without stage-level logging, all you know is "bad output." With it, you can see exactly which stage failed, which rule was violated, and what the model reasoned at each step. That\'s what makes a system auditable and improvable.',
+   bad:'Not quite. While compliance and transparency are valid reasons to log, the operational primary reason is diagnosis. When a failure occurs, the trace is the evidence that tells you whether to fix the orchestrator, the prompt, the model call, or the validation step. Without it, debugging is guesswork.'},
+  {q:'P95 latency is a more useful monitoring metric than average latency for an agent like ContentPilot. Why?',
+   opts:['P95 is easier to calculate and requires less data','Average latency smooths over the worst 5% of requests — but those are precisely the users most likely to abandon or complain. P95 reveals what the "tail" experience is, which is where churn concentrates.','P95 is the industry standard required by SLA contracts','P95 latency automatically accounts for retry logic and failovers'],
+   ans:1,ok:'Correct. Averages are misleading for latency. If 95% of requests complete in 1.8s and 5% take 8s, the average might look acceptable (~2.1s). But 5% of 12,400 monthly requests is 620 users per month experiencing an 8-second wait — the exact users most likely to churn. P95 surfaces the tail behavior that average metrics hide.',
+   bad:'Not quite. The problem with average latency is that it masks tail behavior. A small percentage of very slow requests can represent a significant portion of your worst user experiences. P95 specifically reveals the threshold below which 95% of requests complete — giving you a clearer signal on the user experience outliers who drive churn.'},
+  {q:'ContentPilot\'s Idea Specificity metric drops from 81% to 67% over 90 days with no code changes. What is the most likely cause?',
+   opts:['A bug was introduced in a previous deployment that was never caught','Model drift — the LLM provider silently updated the base model, shifting how it interprets the specificity rules in the system prompt','Users started requesting less specific topics over time','The quality evaluation threshold was recalibrated to a stricter standard'],
+   ans:1,ok:'Correct. Silent model drift is real and common. LLM providers regularly update their models without announcing breaking changes. The same system prompt that produced 81% specificity on model version A may produce 67% on version B. This is why automated eval suites with golden test cases are essential — they catch drift immediately when it happens, not 90 days later.',
+   bad:'Not quite. When quality metrics drift with no code changes, the most common cause is base model drift from the provider. This is a significant operational risk: your agent\'s behavior depends on a model you don\'t control. The mitigation is an automated eval suite that runs daily against fixed golden inputs — so drift shows up as a metric regression, not user churn.'},
+  {q:'When should a pre-flight validation check be implemented at the orchestration layer vs. relying on the system prompt to catch an edge case?',
+   opts:['Pre-flight checks are always preferable — system prompts should never handle validation','If the edge case is safety-critical, affects data quality, or is deterministic (e.g., missing required input), implement it in code. System prompts are probabilistic; code is deterministic.','Rely on the system prompt — it\'s faster to update and doesn\'t require code deployment','Only implement pre-flight checks when the system prompt rule has failed more than 5 times in production'],
+   ans:1,ok:'Correct. This is the layered defense principle. System prompt rules are probabilistic — the model follows them most of the time. Code-level checks are deterministic — they either pass or fail, every time, regardless of model behavior. For any rule where failure has real consequences (hallucination, data loss, policy violation), always add a code-level enforcement at the appropriate pipeline stage.',
+   bad:'Not quite. The key distinction is determinism. A system prompt instruction relies on the model\'s tendency to follow it — which is probabilistic. A code-level check is a hard gate that fires every time. For safety-critical or quality-critical rules, you want deterministic enforcement. System prompts are excellent for shaping tone and reasoning style — less reliable for enforcing preconditions.'},
+  {q:'An agent\'s average monthly cost doubles in 8 weeks with no feature changes. Token cost analysis shows input tokens grew from 650 to 2,100 per request. What is the most likely cause?',
+   opts:['More users are making requests with longer topics','The LLM provider increased their per-token pricing','Memory retrieval is returning an increasing number of context turns per request, causing runaway context growth as the user base accumulates history','The output tokens are too long — the agent is being too verbose'],
+   ans:2,ok:'Correct. This is a common production failure mode: memory context grows unboundedly as users accumulate history, and without a sliding window or relevance filter, every new request carries the full conversation history as context. The fix is a bounded retrieval strategy — return only the N most relevant prior turns, not all of them. Combined with a token budget alert, this prevents cost runaway.',
+   bad:'Not quite. The clue is that input tokens grew from 650 to 2,100 — that\'s 3x growth in input, not output. Output verbosity would show up as output token growth. The input growth pattern, growing proportionally to user history accumulation, points to unbounded memory retrieval. The more history a user has, the more context is pulled — without any cap.'},
+  {q:'What is the purpose of a "canary deploy" in the context of agent orchestration?',
+   opts:['To test the agent with fake user data before going live','To route a small percentage of live traffic to a new model version or prompt change while keeping the majority on the stable version — measuring quality metrics before full rollout','To create a backup copy of the agent in case the primary fails','To test the agent under 10x normal load before a major traffic event'],
+   ans:1,ok:'Correct. Canary deploys let you validate a change in production with real traffic and real quality signals — without exposing all users to potential regressions. If the canary shows quality degradation (e.g., specificity drops), you roll back before it affects the full user base. This is essential for agents where model behavior is probabilistic and hard to predict perfectly in staging.',
+   bad:'Not quite. A canary deploy routes a controlled slice of live traffic to a new version. It\'s the production validation step — because agent behavior with real, diverse user inputs is often different from staging tests. The key is measuring quality metrics (not just uptime) during the canary phase, then promoting to full rollout only when metrics hold.'},
+  {q:'Which of the following best describes a "silent failure" in an agent system — and why is it more dangerous than an error that surfaces an exception?',
+   opts:['A request that times out and is retried automatically — silent because the user never sees the delay','A request that returns HTTP 200 with plausible-looking output that violates a system rule — the user receives something, has no way to know it\'s wrong, and the failure goes unlogged without a quality scoring layer','A failure in the logging pipeline that prevents the run from being recorded','An agent that refuses to answer a question due to a content policy flag'],
+   ans:1,ok:'Correct. Silent failures are dangerous precisely because they look like successes. The user gets a response, the system records a 200 OK, and the failure only shows up in downstream quality metrics — or worse, in user churn. Exceptions and 5xx errors are easy to monitor and fix. Silent quality failures require proactive logging, quality scoring, and anomaly detection to catch.',
+   bad:'Not quite. A silent failure is specifically characterized by: (1) the system returning success from a technical standpoint (HTTP 200, no exception), and (2) the output being wrong in a way that isn\'t immediately obvious. These are the hardest failures to catch because standard monitoring won\'t surface them. Only quality-aware logging and async scoring pipelines can detect them reliably.'},
+];
+let qIdx=0,qScore=0,qStarted=false,qAnswered=false;
+function initQuiz(){qStarted=true;qIdx=0;qScore=0;showQ();}
+function showQ(){
+  qAnswered=false;
+  const q=QUESTIONS[qIdx];
+  document.getElementById('qProg').style.width=(qIdx/QUESTIONS.length*100)+'%';
+  document.getElementById('qMeta').textContent=`Question ${qIdx+1} of ${QUESTIONS.length}`;
+  document.getElementById('qScoreTxt').textContent=`Score: ${qScore} / ${qIdx}`;
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFB').className='fb-box';document.getElementById('quizFB').innerHTML='';
+  document.getElementById('qNextBtn').style.display='none';
+  const L=['A','B','C','D'];
+  document.getElementById('quizOpts').innerHTML=q.opts.map((o,i)=>
+    `<button class="q-opt" onclick="answerQ(${i})"><div class="q-opt-k">${L[i]}</div>${o}</button>`
+  ).join('');
+}
+function answerQ(i){
+  if(qAnswered)return; qAnswered=true;
+  const q=QUESTIONS[qIdx];const ok=i===q.ans;if(ok)qScore++;
+  document.querySelectorAll('.q-opt').forEach((el,idx)=>{
+    el.classList.add('disabled');
+    if(idx===q.ans)el.classList.add('correct');
+    else if(idx===i&&!ok)el.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFB');
+  fb.innerHTML=`<span style="font-size:1.1rem;flex-shrink:0">${ok?'✓':'✗'}</span><span>${ok?q.ok:q.bad}</span>`;
+  fb.className='fb-box show '+(ok?'ok':'bad');
+  document.getElementById('qScoreTxt').textContent=`Score: ${qScore} / ${qIdx+1}`;
+  document.getElementById('qNextBtn').style.display='inline-flex';
+  if(qIdx===QUESTIONS.length-1)document.getElementById('qNextBtn').textContent='See Results →';
+}
+function nextQ(){qIdx++;if(qIdx>=QUESTIONS.length){showQuizDone();return;}showQ();}
+function showQuizDone(){
+  document.getElementById('quizActive').style.display='none';
+  document.getElementById('quizDone').style.display='block';
+  const pct=Math.round(qScore/QUESTIONS.length*100);
+  sectionScores.quiz={earned:qScore,possible:QUESTIONS.length};
+  if(pct>=70)markDone('quiz');
+  document.getElementById('qBadge').innerHTML=`<span style="background:${pct>=70?'rgba(34,197,94,.15)':'rgba(232,51,58,.15)'};color:${pct>=70?'var(--green)':'var(--GA-red)'};padding:3px 10px;border-radius:20px;font-size:.85rem;font-weight:700">${qScore}/${QUESTIONS.length} · ${pct}%</span>`;
+  document.getElementById('qMsg').textContent=pct>=90?`${pct}% — expert-level monitoring and orchestration instincts. You understand how agents fail in production and how to build systems that catch it.`:pct>=70?`${pct}% — solid foundations. Review the log analysis and scalability sections for the principles you missed.`:`${pct}% — revisit the Dashboard, Log, and Diagnose sections. The core concept is: build systems that detect failures before users do.`;
+}
+
+// ─── RESULTS ─────────────────────────────────────────────────────────────────
+function buildResults(){
+  const scoreMap=[
+    {label:'Live Dashboard Analysis',    e:(sectionScores.dashboard?.earned||0),  p:2},
+    {label:'Log Analysis',               e:(sectionScores.logs?.earned||0),       p:1},
+    {label:'Failure Classification',     e:(sectionScores.diagnoseQ1?.earned||0)+(sectionScores.diagnoseQ2?.earned||0),p:2},
+    {label:'Prompt Refinement',          e:(sectionScores.refine?.earned||0),     p:1},
+    {label:'Scalability Matching',       e:(sectionScores.scale?.earned||0),      p:4},
+    {label:'Knowledge Check',            e:(sectionScores.quiz?.earned||0),       p:7},
+  ];
+  const te=scoreMap.reduce((s,x)=>s+x.e,0);
+  const tp=scoreMap.reduce((s,x)=>s+x.p,0);
+  const pct=tp>0?Math.round(te/tp*100):0;
+  const grade=pct>=90?{l:'Site Reliability Architect',e:'🔭',m:'End-to-end mastery of production agent operations — dashboards, log forensics, root cause analysis, and scalability design.'}
+             :pct>=70?{l:'Production Engineer',e:'⚙️',m:'Strong monitoring and orchestration foundations. You can operate agents reliably at scale.'}
+             :pct>=50?{l:'Ops Apprentice',e:'🔬',m:'Good instincts. Revisit the Log Analysis and Diagnose sections to deepen your RCA skills.'}
+                     :{l:'Explorer',e:'🔍',m:'Start from the Dashboard section — the concepts build sequentially from observation to diagnosis to fix.'};
+  const circ=2*Math.PI*52,dash=circ*(1-pct/100);
+  const rows=scoreMap.map(item=>{
+    const p=item.p>0?Math.round(item.e/item.p*100):0;
+    const col=p>=80?'var(--green)':p>=50?'var(--yellow)':'var(--GA-red)';
+    return `<div class="score-row">
+      <div style="width:8px;height:8px;border-radius:50%;background:${col};flex-shrink:0"></div>
+      <span style="flex:1;font-size:.9rem;font-weight:500;color:var(--gray-lt)">${item.label}</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${p}%;background:${col}"></div></div>
+      <span style="font-size:.82rem;color:var(--gray);min-width:38px;text-align:right">${item.e}/${item.p}</span>
+      <span style="background:${p>=80?'rgba(34,197,94,.15)':p>=50?'rgba(245,197,24,.15)':'rgba(232,51,58,.15)'};color:${col};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;min-width:40px;text-align:center">${p}%</span>
+    </div>`;
+  }).join('');
+  const takeaways=[
+    'Dashboards are your first line of defense — but only if you measure the right things. Average metrics hide tail behavior. P95 latency surfaces the users most likely to abandon. Error rate alone misses silent failures. Quality metrics (specificity, format adherence) catch the failures that HTTP monitoring never will. Build a dashboard that includes output quality signals, not just infrastructure health.',
+    'Root cause analysis is a skill, not a checklist. When you find a failure in a reasoning trace, the question isn\'t "what went wrong" — it\'s "at which layer of the stack did the enforcement responsibility belong, and was it there?" Pipeline orchestration is the authoritative layer for preconditions. Prompt rules are probabilistic. Code gates are deterministic. Assign enforcement responsibility to the right layer.',
+    'Scalability failures are predictable — they follow patterns. Latency spikes follow prompt size growth. Cost runaway follows unbounded memory retrieval. Quality drift follows base model updates. Single points of failure follow missing redundancy. Each pattern has a well-known mitigation. The monitoring systems that let you catch the signal early are more valuable than any post-hoc fix.',
+  ].map((t,i)=>`<div style="display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)"><div style="font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--GA-red);flex-shrink:0;line-height:1;padding-top:2px">0${i+1}</div><div style="font-size:.92rem;color:var(--gray-lt);line-height:1.7">${t}</div></div>`).join('');
+  document.getElementById('resultsBody').innerHTML=`
+    <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding-bottom:36px;border-bottom:1px solid var(--line);margin-bottom:32px">
+      <div style="position:relative;width:120px;height:120px;flex-shrink:0">
+        <svg width="120" height="120" style="transform:rotate(-90deg)" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--black3)" stroke-width="8"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--GA-red)" stroke-width="8"
+            stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${dash.toFixed(1)}"
+            stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1">${pct}%</div>
+          <div style="font-size:.7rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:2px">score</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:2rem;margin-bottom:4px">${grade.e}</div>
+        <h2 style="font-size:clamp(2rem,5vw,2.8rem);margin-bottom:6px">${grade.l}</h2>
+        <p style="color:var(--gray-lt);font-size:.95rem;max-width:500px">${grade.m}</p>
+        <p style="color:var(--gray-dk);font-size:.82rem;margin-top:6px;font-family:'JetBrains Mono',monospace">${te} pts earned · ${tp} pts possible</p>
+      </div>
+    </div>
+    <span class="eyebrow">Score Breakdown</span>
+    <div class="card" style="padding:8px 20px;margin-bottom:28px">${rows}</div>
+    <span class="eyebrow">Three Things to Carry Forward</span>
+    <div class="card" style="padding:8px 20px;margin-bottom:24px">${takeaways}</div>
+    <div style="background:linear-gradient(135deg,rgba(232,51,58,.08) 0%,rgba(59,130,246,.08) 100%);border:1px solid rgba(232,51,58,.2);border-radius:var(--r-lg);padding:28px">
+      <div style="font-size:2rem;margin-bottom:10px">🔭</div>
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:10px">Monitoring &amp; Orchestration — Module Complete</h3>
+      <p style="font-size:.95rem;color:var(--gray-lt);line-height:1.8;max-width:640px">You've moved beyond building to <em>operating</em>. You can now read a production dashboard and identify what needs attention, forensically trace a failure through a reasoning log, diagnose the root cause at the correct stack layer, prescribe a surgical fix, and map scaling failure modes to architectural mitigations.<br/><br/>
+      <strong style="color:#fff">That's the full reliability loop.</strong> Build → Monitor → Detect → Diagnose → Fix → Re-measure. The agents that survive in production are the ones with this loop running continuously — not the ones with the best launch day.</p>
+    </div>`;
+}
+</script>
+</body>
+</html>
