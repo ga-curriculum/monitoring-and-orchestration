@@ -435,3 +435,7 @@ https://pages.git.generalassemb.ly/Build-AI-Agents/Monitoring-and-Orchestration/
 - Anthropic — *Building Reliable AI Systems: Evaluation and Monitoring* — [anthropic.com](https://www.anthropic.com)
 - NIST — *AI Risk Management Framework: Govern and Monitor Functions* (AI RMF 1.0)
 - McKinsey — *The State of AI in 2024: Scaling What Works*
+
+---
+
+*General Assembly · Build AI Agents · BAA 16.0 · © 2026*
