@@ -410,7 +410,7 @@ Before increasing the volume, complexity, or autonomy of an agent:
 
 ## 5. Lab (60 min)
 
-https://pages.git.generalassemb.ly/Build-AI-Agents/Monitoring-and-Orchestration/
+https://ga-curriculum.github.io/monitoring-and-orchestration/
 
 ---
 
